@@ -15,18 +15,30 @@ struct ReactionTimeView: View {
     let greenColor: Color       = Color(#colorLiteral(red: 0.29623577, green: 0.8585592508, blue: 0.4167816639, alpha: 1))
     let blueColor: Color        = Color(#colorLiteral(red: 0.1610118449, green: 0.5290118456, blue: 0.8145868182, alpha: 1))
     let textPrimaryColor: Color = Color(#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0))
+    
+    
     var body: some View {
         //Screen 1 "Tap to start!"
-        ScreenOne()
+        ScreenOne(bestScore: nil, bestLastAverageScore: nil)
+            .onTapGesture {
+                reactionTimeViewModel.incrementNumOfTries()
+                print("\(reactionTimeViewModel.numOfTries)")
+            }
         
         //Screen 2 "Wait for green"
-        ScreenTwo()
+        //ScreenTwo(averageScore: nil, numOfTries: nil, maxNumOfTries: 5)
         
         //Screen 3 "Tap"
-        ScreenThree()
+        //ScreenThree(averageScore: nil, numOfTries: nil, maxNumOfTries: 5)
         
         //Screen 4 "Finished"
-        ScreenFour()
+        //ScreenFour(score: nil, averageScore: nil, numOfTries: nil, maxNumOfTries: 5)
+        //Screen 5 "Too soon!"
+        //TODO: Make a "Too soon!" screen.
+        //ScreenFour(score: 69, averageScore: nil, numOfTries: nil, maxNumOfTries: 40)
+        
+        
+        
     }
 }
 /**
@@ -39,7 +51,7 @@ struct ReactionTimeView: View {
  */
 
 
-///
+/// This view is for the template for each screen.
 struct Template: View {
     var backGroundColor: Color
     var titleText: String
@@ -160,27 +172,32 @@ struct ThreeDots: View {
 }
 
 struct ScreenOne: View {
+    var bestScore: Int?
+    var bestLastAverageScore: Int?
     var body: some View {
         Template(backGroundColor: ReactionTimeView().blueColor,
                  titleText: "Tap to Start!",
                  subTitleText1: "Best",
-                 subTitleValue1: "0ms",
+                 subTitleValue1: "\(bestScore ?? 0)ms",
                  subTitleText2: "Last",
-                 subTitleValue2: "0ms",
+                 subTitleValue2: "\(bestLastAverageScore ?? 0)ms",
                  textColor: ReactionTimeView().textPrimaryColor,
                  middleText: "When the red box turns green, tap as quickly as you can.")
     }
 }
 
 struct ScreenTwo: View {
+    var averageScore: Int?
+    var numOfTries: Int?
+    var maxNumOfTries: Int
     var body: some View {
         ZStack {
             Template(backGroundColor: ReactionTimeView().redColor,
                      titleText: "Wait for green...",
                      subTitleText1: "Average",
-                     subTitleValue1: "0ms",
+                     subTitleValue1: "\(averageScore ?? 0)ms",
                      subTitleText2: "Tries",
-                     subTitleValue2: "0 of 5",
+                     subTitleValue2: "\(numOfTries ?? 0) of \(maxNumOfTries)",
                      textColor: ReactionTimeView().textPrimaryColor)
             VStack {
                 ThreeDots(color: ReactionTimeView().textPrimaryColor)
@@ -192,14 +209,17 @@ struct ScreenTwo: View {
 }
 
 struct ScreenThree: View {
+    var averageScore: Int?
+    var numOfTries: Int?
+    var maxNumOfTries: Int
     var body: some View {
         ZStack {
             Template(backGroundColor: ReactionTimeView().greenColor,
                      titleText: "Tap!",
                      subTitleText1: "Average",
-                     subTitleValue1: "0ms",
+                     subTitleValue1: "\(averageScore ?? 0)ms",
                      subTitleText2: "Tries",
-                     subTitleValue2: "0 of 5",
+                     subTitleValue2: "\(numOfTries ?? 0) of \(maxNumOfTries)",
                      textColor: ReactionTimeView().textPrimaryColor,
                      middleText: nil)
             VStack {
@@ -216,14 +236,18 @@ struct ScreenThree: View {
 }
 
 struct ScreenFour: View {
+    var score: Int?
+    var averageScore: Int?
+    var numOfTries: Int?
+    var maxNumOfTries: Int
     var body: some View {
         ZStack {
             Template(backGroundColor: ReactionTimeView().blueColor,
-                     titleText: "150ms",
+                     titleText: "\(score ?? 0)ms",
                      subTitleText1: "Average",
-                     subTitleValue1: "0ms",
+                     subTitleValue1: "\(averageScore ?? 0)ms",
                      subTitleText2: "Tries",
-                     subTitleValue2: "0 of 5",
+                     subTitleValue2: "\(numOfTries ?? 0) of \(maxNumOfTries)",
                      textColor: ReactionTimeView().textPrimaryColor,
                      middleText: nil)
             VStack {

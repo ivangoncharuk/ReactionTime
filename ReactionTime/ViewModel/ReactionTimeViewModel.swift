@@ -8,10 +8,41 @@
 import SwiftUI
 
 class ReactionTimeViewModel: ObservableObject {
-    @Published var tries: Int = 0
-    @Published var reactionTimeInMS: Double = 0.000
-    @Published var avgTimeInMS: Double = 0.000
-    @Published var lastAvg: Double? //optional because there is no lastAvg on the first playthrough
     
+    //Card 1's stuff
+    @Published var bestScore:               Int?
+    @Published var lastAvg:                 Double?
+    //Card(s) (2...4)'s stuff
+    @Published var avgTimeScoreInMS:        Double?
+    @Published var numOfTries:              Int = 0
+    @Published var maxNumOfTries:           Int = 5
+    //Card 4's stuff
+    @Published var reactionTimeScoreInMS:   Double?
     
+    @Published var currentScreenState: ScreenState = ScreenState.startScreen
+    
+    enum ScreenState {
+        case startScreen, waitForGreenScreen, tooSoonScreen, tapScreen, resultScreen
+    }
+    func timer() {
+    }
+    
+    //MARK: - Intents
+    func resetGame() {
+        currentScreenState = ScreenState.startScreen
+        bestScore = nil
+        lastAvg = nil
+        avgTimeScoreInMS = nil
+        numOfTries = 0
+        maxNumOfTries = 5
+    }
+    func incrementNumOfTries() {
+        numOfTries += 1
+    }
+    func changeScreen(to screen: ScreenState) {
+        currentScreenState = screen
+    }
+    func isTooSoon() -> Bool {
+        return false
+    }
 }
