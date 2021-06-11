@@ -12,17 +12,34 @@ struct ReactionTimeView: View {
     @StateObject private var reactionTimeViewModel = ReactionTimeViewModel()
     
     var body: some View {
-        StartScreen()
+        StartScreen(backGroundColor: Color(#colorLiteral(red: 0.1610118449, green: 0.5290118456, blue: 0.8145868182, alpha: 1)),
+                    titleText: "Tap to Start!",
+                    subTitleText1: "Best",
+                    subTitleValue1: "0ms",
+                    subTitleText2: "Last",
+                    subTitleValue2: "0ms")
     }
 }
-
+/**
+ var backGroundColor: Color = Color(#colorLiteral(red: 0.1610118449, green: 0.5290118456, blue: 0.8145868182, alpha: 1))
+ var titleText: String = "Tap to Start!"
+ var subTitleText1: String = "Best"
+ var subTitleValue1: String = "0ms"
+ var subTitleText2: String = "Last"
+ var subTitleValue2: String = "0ms"
+ */
 struct StartScreen: View {
+    var backGroundColor: Color
+    var titleText: String
+    var subTitleText1: String
+    var subTitleValue1: String
+    var subTitleText2: String
+    var subTitleValue2: String
+    
     var body: some View {
         ZStack {
-            
             let smallTextSize: CGFloat = 25.0
             let bigTextSize: CGFloat = 55.0
-            let backGroundColor: Color = Color(#colorLiteral(red: 0.1610118449, green: 0.5290118456, blue: 0.8145868182, alpha: 1))
             
             BackGroundView(color: backGroundColor)
             VStack {
@@ -32,7 +49,7 @@ struct StartScreen: View {
                     VStack {
                         Spacer()
                         //Add an Icon here if you need to
-                        TextView(size: bigTextSize, text:  "Tap to Start!")
+                        TextView(size: bigTextSize, text:  titleText)
                             .padding(.bottom, 50)
                     }
                 }
@@ -46,8 +63,8 @@ struct StartScreen: View {
                 
                 ZStack(alignment: .bottom) {
                     VStack {
-                        TextView(size: smallTextSize, text: "Best  |  0ms").padding()
-                        TextView(size: smallTextSize, text: "Last  |  0ms").padding()
+                        TextView(size: smallTextSize, text: "\(subTitleText1) |  \(subTitleValue1)").padding()
+                        TextView(size: smallTextSize, text: "\(subTitleText2)  |  \(subTitleValue2)").padding()
                     }
                     .padding(.bottom, 150)
                 }
@@ -82,12 +99,6 @@ struct TextView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ReactionTimeView()
-    }
-}
-
 struct ThreeDots: View {
     var body: some View {
         HStack(alignment: .center, spacing: 15) {
@@ -98,3 +109,19 @@ struct ThreeDots: View {
         }
     }
 }
+
+struct BasicScreen: View {
+    var body: some View {
+        ZStack {
+            
+        }
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ReactionTimeView()
+    }
+}
+
+
