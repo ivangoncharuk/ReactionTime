@@ -9,46 +9,42 @@ import SwiftUI
 
 
 struct ReactionTimeView: View {
-    @StateObject private var reactionTimeViewModel = ReactionTimeViewModel()
+    @ObservedObject var reactionTimeViewModel = ReactionTimeViewModel()
+    
+    enum ScreenState {
+        case startScreen, waitForGreenScreen, tooSoonScreen, tapScreen, resultScreen
+    }
     
     let redColor: Color         = Color(#colorLiteral(red: 0.806209743, green: 0.1509520113, blue: 0.2106329799, alpha: 1))
     let greenColor: Color       = Color(#colorLiteral(red: 0.29623577, green: 0.8585592508, blue: 0.4167816639, alpha: 1))
     let blueColor: Color        = Color(#colorLiteral(red: 0.1610118449, green: 0.5290118456, blue: 0.8145868182, alpha: 1))
     let textPrimaryColor: Color = Color(#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0))
     
-    
     var body: some View {
-        //Screen 1 "Tap to start!"
-        ScreenOne(bestScore: nil, bestLastAverageScore: nil)
-            .onTapGesture {
-                reactionTimeViewModel.incrementNumOfTries()
-                print("\(reactionTimeViewModel.numOfTries)")
-            }
-        
-        //Screen 2 "Wait for green"
-        //ScreenTwo(averageScore: nil, numOfTries: nil, maxNumOfTries: 5)
-        
-        //Screen 3 "Tap"
-        //ScreenThree(averageScore: nil, numOfTries: nil, maxNumOfTries: 5)
-        
-        //Screen 4 "Finished"
-        //ScreenFour(score: nil, averageScore: nil, numOfTries: nil, maxNumOfTries: 5)
-        //Screen 5 "Too soon!"
-        //TODO: Make a "Too soon!" screen.
-        //ScreenFour(score: 69, averageScore: nil, numOfTries: nil, maxNumOfTries: 40)
-        
-        
+        //TODO: Make this actually channge views somehow..
+        switch reactionTimeViewModel.currentScreenState {
+        case 1:
+            //Screen 1 "Tap to start!"
+            ScreenOne(bestScore: nil, bestLastAverageScore: nil)
+        case 2:
+            //Screen 2 "Wait for green"
+            ScreenTwo(averageScore: nil, numOfTries: nil, maxNumOfTries: 5)
+        case 3:
+            //Screen 3 "Tap"
+            ScreenThree(averageScore: nil, numOfTries: nil, maxNumOfTries: 5)
+        case 4:
+            //Screen 4 "Finished"
+            ScreenFour(score: nil, averageScore: nil, numOfTries: nil, maxNumOfTries: 5)
+        case 5:
+            //Screen 5 "Too soon!"
+            //TODO: Make a "Too soon!" screen.
+            ScreenFour(score: 69, averageScore: nil, numOfTries: nil, maxNumOfTries: 40)
+        default:
+            ScreenOne(bestScore: nil, bestLastAverageScore: nil)
+        }
         
     }
 }
-/**
- var backGroundColor: Color = Color(#colorLiteral(red: 0.1610118449, green: 0.5290118456, blue: 0.8145868182, alpha: 1))
- var titleText: String = "Tap to Start!"
- var subTitleText1: String = "Best"
- var subTitleValue1: String = "0ms"
- var subTitleText2: String = "Last"
- var subTitleValue2: String = "0ms"
- */
 
 
 /// This view is for the template for each screen.
@@ -80,7 +76,7 @@ struct Template: View {
                         .padding(.horizontal)
                         .multilineTextAlignment(.center)
                 }
-                .frame(width: .infinity, height: 100)
+                .frame(width: UIScreen.main.bounds.width, height: 100)
                 DataView(label1: subTitleText1,
                          label2: subTitleText2,
                          data1: subTitleValue1,
@@ -183,6 +179,10 @@ struct ScreenOne: View {
                  subTitleValue2: "\(bestLastAverageScore ?? 0)ms",
                  textColor: ReactionTimeView().textPrimaryColor,
                  middleText: "When the red box turns green, tap as quickly as you can.")
+            .onTapGesture {
+                ReactionTimeViewModel().changeState(to: 2)
+                print("Change motherfucker")
+            }
     }
 }
 
