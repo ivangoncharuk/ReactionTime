@@ -36,27 +36,27 @@ struct ReactionTimeView: View {
         }
     }
     
-    func titleText(_ x: Int) -> String {
-        switch x {
-        case 1:
-            return "Tap to Start!"
-        case 2:
-            return "Wait for Green"
-        case 3:
-            return "Too soon :("
-        case 4:
-            return "Tap!"
-        case 5:
-            return "0ms"
-        default:
-            return "default text"
-        }
-    }
     
     var body: some View {
         let bestScore = vModel.bestScore
         let averageScore = vModel.avgTimeScoreInMS
         ZStack {
+            let titleText: (Int) -> String = {x in
+                switch x {
+                case 1:
+                    return "Tap to Start!"
+                case 2:
+                    return "Wait for Green"
+                case 3:
+                    return "Too soon :("
+                case 4:
+                    return "Tap!"
+                case 5:
+                    return String(vModel.currentReactionTimeScoreInMS) + "ms"
+                default:
+                    return "default text"
+                }
+            }
             let a = vModel.currentScreenState
             Template(backGroundColor: bgColor(a),
                      titleText: titleText(a),
@@ -68,13 +68,13 @@ struct ReactionTimeView: View {
                      middleText: (a == 1) ? descriptionText :
                                  (a == 3) ? "Tap to try again" : "")
                 .onTapGesture {
-                    vModel.tappedTheScreenCopy()
+                    vModel.tappedTheScreen()
                 }
             switch a {
             case 2:
                 ThreeDots(color: textPrimaryColor)
                     .padding(.bottom, 400)
-            case 3:
+            case 3, 5:
                 Image(systemName: "clock")
                     .font(.system(size: 140, weight: .bold, design: .default))
                     .foregroundColor(textPrimaryColor)
@@ -84,15 +84,11 @@ struct ReactionTimeView: View {
                     .font(.system(size: 140, weight: .bold, design: .default))
                     .foregroundColor(textPrimaryColor)
                     .padding(.bottom, 400)
-            case 5:
-                Image(systemName: "clock")
-                    .font(.system(size: 140, weight: .bold, design: .default))
-                    .foregroundColor(textPrimaryColor)
-                    .padding(.bottom, 400)
             default:
-                ZStack{}
+                EmptyView()
             }
-            Text("state: \(a)")
+            
+            Text(String(vModel.currentReactionTimeScoreInMS) + "ms")
                 .padding(.top, 700)
                 .font(.system(size: 40, weight: .black, design: .monospaced))
         }

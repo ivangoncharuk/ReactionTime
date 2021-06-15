@@ -8,7 +8,7 @@
 import SwiftUI
 
 class ReactionTimeViewModel: ObservableObject {
-    
+
     @Published var bestScore:                    Int?
     @Published var lastAvg:                      Double?
     @Published var avgTimeScoreInMS:             Double?
@@ -16,8 +16,12 @@ class ReactionTimeViewModel: ObservableObject {
     @Published var maxNumOfTries:                Int = 5
     @Published var currentReactionTimeScoreInMS: Int = 0
     
-    var time = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @Published var timer = Timer()
     @Published var isTimerOn: Bool = false
+    
+    @Published var timer2 = Timer()
+    @Published var isTimer2On: Bool = false
+    @Published var timePassed: Int = 0
     
     @Published var currentScreenState: Int = 1
     
@@ -34,30 +38,18 @@ class ReactionTimeViewModel: ObservableObject {
     func tappedTheScreen() {
         switch currentScreenState {
         case 1:
+            //just goes to wait screen
             currentScreenState = 2
-        case 2:
-            currentScreenState = 4
-        case 3:
-            currentScreenState = 2
-        case 4:
-            currentScreenState = 5
-        case 5:
-            currentScreenState = 1
-        default:
-            currentScreenState = 1
-        }
-    }
-    func tappedTheScreenCopy() {
-        switch currentScreenState {
-        case 1:
-            currentScreenState = 2
+            randomCountDown()
         case 2:
             currentScreenState = 3
         case 3:
-            currentScreenState = 4
+            currentScreenState = 2
         case 4:
+            stopTimer()
             currentScreenState = 5
         case 5:
+            currentReactionTimeScoreInMS = 0
             currentScreenState = 1
         default:
             currentScreenState = 1
@@ -80,8 +72,27 @@ class ReactionTimeViewModel: ObservableObject {
         }
         print(numOfTries)
     }
+    func incrementTime() {
+        currentReactionTimeScoreInMS += 1
+    }
 
     func startTimer() {
         isTimerOn.toggle()
+        timer = Timer.scheduledTimer(withTimeInterval: 0.001, repeats: true) {timer in
+            self.currentReactionTimeScoreInMS += 1
+        }
+    }
+    func stopTimer() {
+        isTimerOn.toggle()
+        timer.invalidate()
+    }
+    func randomCountDown() {
+        let s = Int.random(in: 3...7)
+        DispatchQueue.main.asyncAfter(deadline: .now() + DispatchTimeInterval.seconds(s)) {
+            if self.currentScreenState == 2 {
+                self.currentScreenState = 4
+                self.startTimer()
+            }
+        }
     }
 }
