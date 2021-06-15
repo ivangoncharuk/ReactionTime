@@ -9,43 +9,96 @@ import SwiftUI
 
 
 struct ReactionTimeView: View {
-    @ObservedObject var reactionTimeViewModel = ReactionTimeViewModel()
+    @ObservedObject var vModel = ReactionTimeViewModel()
     
-    enum ScreenState {
-        case startScreen, waitForGreenScreen, tooSoonScreen, tapScreen, resultScreen
-    }
     
     let redColor: Color         = Color(#colorLiteral(red: 0.806209743, green: 0.1509520113, blue: 0.2106329799, alpha: 1))
     let greenColor: Color       = Color(#colorLiteral(red: 0.29623577, green: 0.8585592508, blue: 0.4167816639, alpha: 1))
     let blueColor: Color        = Color(#colorLiteral(red: 0.1610118449, green: 0.5290118456, blue: 0.8145868182, alpha: 1))
     let textPrimaryColor: Color = Color(#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0))
+    let descriptionText: String = "When the red box turns green, tap as quickly as you can."
+    
+    var bgColor: (Int) -> Color = { x in
+        let a = ReactionTimeView()
+        switch x {
+        case 1:
+            return a.blueColor
+        case 2:
+            return a.redColor
+        case 3:
+            return a.blueColor
+        case 4:
+            return a.greenColor
+        case 5:
+            return a.blueColor
+        default:
+            return a.blueColor
+        }
+    }
+    
+    func titleText(_ x: Int) -> String {
+        switch x {
+        case 1:
+            return "Tap to Start!"
+        case 2:
+            return "Wait for Green"
+        case 3:
+            return "Too soon :("
+        case 4:
+            return "Tap!"
+        case 5:
+            return "0ms"
+        default:
+            return "default text"
+        }
+    }
     
     var body: some View {
-        //TODO: Make this actually channge views somehow..
-        switch reactionTimeViewModel.currentScreenState {
-        case 1:
-            //Screen 1 "Tap to start!"
-            ScreenOne(bestScore: nil, bestLastAverageScore: nil)
-        case 2:
-            //Screen 2 "Wait for green"
-            ScreenTwo(averageScore: nil, numOfTries: nil, maxNumOfTries: 5)
-        case 3:
-            //Screen 3 "Tap"
-            ScreenThree(averageScore: nil, numOfTries: nil, maxNumOfTries: 5)
-        case 4:
-            //Screen 4 "Finished"
-            ScreenFour(score: nil, averageScore: nil, numOfTries: nil, maxNumOfTries: 5)
-        case 5:
-            //Screen 5 "Too soon!"
-            //TODO: Make a "Too soon!" screen.
-            ScreenFour(score: 69, averageScore: nil, numOfTries: nil, maxNumOfTries: 40)
-        default:
-            ScreenOne(bestScore: nil, bestLastAverageScore: nil)
+        let bestScore = vModel.bestScore
+        let averageScore = vModel.avgTimeScoreInMS
+        ZStack {
+            let a = vModel.currentScreenState
+            Template(backGroundColor: bgColor(a),
+                     titleText: titleText(a),
+                     subTitleText1:     (a == 1) ? "Best" : "Average",
+                     subTitleValue1:    (a == 1) ? "\(bestScore ?? 0)ms" : "\(averageScore ?? 0)ms",
+                     subTitleText2:     (a == 1) ? "Last" : "Tries",
+                     subTitleValue2:    (a == 1) ? "0ms" : "0ms",
+                     textColor: textPrimaryColor,
+                     middleText: (a == 1) ? descriptionText :
+                                 (a == 3) ? "Tap to try again" : "")
+                .onTapGesture {
+                    vModel.tappedTheScreenCopy()
+                }
+            switch a {
+            case 2:
+                ThreeDots(color: textPrimaryColor)
+                    .padding(.bottom, 400)
+            case 3:
+                Image(systemName: "clock")
+                    .font(.system(size: 140, weight: .bold, design: .default))
+                    .foregroundColor(textPrimaryColor)
+                    .padding(.bottom, 400)
+            case 4:
+                Image(systemName: "exclamationmark.circle")
+                    .font(.system(size: 140, weight: .bold, design: .default))
+                    .foregroundColor(textPrimaryColor)
+                    .padding(.bottom, 400)
+            case 5:
+                Image(systemName: "clock")
+                    .font(.system(size: 140, weight: .bold, design: .default))
+                    .foregroundColor(textPrimaryColor)
+                    .padding(.bottom, 400)
+            default:
+                ZStack{}
+            }
+            Text("state: \(a)")
+                .padding(.top, 700)
+                .font(.system(size: 40, weight: .black, design: .monospaced))
         }
-        
+        .statusBar(hidden: true)
     }
 }
-
 
 /// This view is for the template for each screen.
 struct Template: View {
@@ -95,7 +148,6 @@ struct BackGroundView: View {
         Rectangle()
             .foregroundColor(color)
             .ignoresSafeArea()
-        
     }
 }
 
@@ -135,6 +187,7 @@ struct TitleView: View {
 
 /// This view is for the formatting of the two lines of data at the bottom of all the screens
 struct DataView: View {
+    @ObservedObject var vModel = ReactionTimeViewModel()
     var label1: String
     var label2: String
     var data1: String
@@ -144,8 +197,10 @@ struct DataView: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             VStack {
-                TextView(size: textSize, text: "\(label1) |  \(data1)", textColor: textColor).padding()
-                TextView(size: textSize, text: "\(label2)  |  \(data2)", textColor: textColor).padding()
+                if vModel.currentScreenState != 3 {
+                    TextView(size: textSize, text: "\(label1)  |  \(data1)", textColor: textColor).padding()
+                    TextView(size: textSize, text: "\(label2)  |  \(data2)", textColor: textColor).padding()
+                }
             }
             .padding(.bottom, 120)
         }
@@ -158,106 +213,9 @@ struct ThreeDots: View {
     var body: some View {
         HStack(alignment: .center, spacing: 15) {
             ForEach(0..<3) { _ in
-                RoundedRectangle(cornerRadius: 20)
+                RoundedRectangle(cornerRadius: 13)
                     .foregroundColor(color)
                     .frame(width: 50, height: 50, alignment: .center)
-                
-            }
-        }
-    }
-}
-
-struct ScreenOne: View {
-    var bestScore: Int?
-    var bestLastAverageScore: Int?
-    var body: some View {
-        Template(backGroundColor: ReactionTimeView().blueColor,
-                 titleText: "Tap to Start!",
-                 subTitleText1: "Best",
-                 subTitleValue1: "\(bestScore ?? 0)ms",
-                 subTitleText2: "Last",
-                 subTitleValue2: "\(bestLastAverageScore ?? 0)ms",
-                 textColor: ReactionTimeView().textPrimaryColor,
-                 middleText: "When the red box turns green, tap as quickly as you can.")
-            .onTapGesture {
-                ReactionTimeViewModel().changeState(to: 2)
-                print("Change motherfucker")
-            }
-    }
-}
-
-struct ScreenTwo: View {
-    var averageScore: Int?
-    var numOfTries: Int?
-    var maxNumOfTries: Int
-    var body: some View {
-        ZStack {
-            Template(backGroundColor: ReactionTimeView().redColor,
-                     titleText: "Wait for green...",
-                     subTitleText1: "Average",
-                     subTitleValue1: "\(averageScore ?? 0)ms",
-                     subTitleText2: "Tries",
-                     subTitleValue2: "\(numOfTries ?? 0) of \(maxNumOfTries)",
-                     textColor: ReactionTimeView().textPrimaryColor)
-            VStack {
-                ThreeDots(color: ReactionTimeView().textPrimaryColor)
-                    .padding(.top, 145)
-                Spacer()
-            }
-        }
-    }
-}
-
-struct ScreenThree: View {
-    var averageScore: Int?
-    var numOfTries: Int?
-    var maxNumOfTries: Int
-    var body: some View {
-        ZStack {
-            Template(backGroundColor: ReactionTimeView().greenColor,
-                     titleText: "Tap!",
-                     subTitleText1: "Average",
-                     subTitleValue1: "\(averageScore ?? 0)ms",
-                     subTitleText2: "Tries",
-                     subTitleValue2: "\(numOfTries ?? 0) of \(maxNumOfTries)",
-                     textColor: ReactionTimeView().textPrimaryColor,
-                     middleText: nil)
-            VStack {
-                Image(systemName: "clock")
-                    .font(.system(size: 150,
-                                  weight: .bold,
-                                  design: .default))
-                    .foregroundColor(ReactionTimeView().textPrimaryColor)
-                    .padding(.top, 100)
-                Spacer()
-            }
-        }
-    }
-}
-
-struct ScreenFour: View {
-    var score: Int?
-    var averageScore: Int?
-    var numOfTries: Int?
-    var maxNumOfTries: Int
-    var body: some View {
-        ZStack {
-            Template(backGroundColor: ReactionTimeView().blueColor,
-                     titleText: "\(score ?? 0)ms",
-                     subTitleText1: "Average",
-                     subTitleValue1: "\(averageScore ?? 0)ms",
-                     subTitleText2: "Tries",
-                     subTitleValue2: "\(numOfTries ?? 0) of \(maxNumOfTries)",
-                     textColor: ReactionTimeView().textPrimaryColor,
-                     middleText: nil)
-            VStack {
-                Image(systemName: "clock")
-                    .font(.system(size: 150,
-                                  weight: .bold,
-                                  design: .default))
-                    .foregroundColor(ReactionTimeView().textPrimaryColor)
-                    .padding(.top, 100)
-                Spacer()
             }
         }
     }
