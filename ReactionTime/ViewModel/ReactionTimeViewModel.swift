@@ -8,91 +8,68 @@
 import SwiftUI
 
 class ReactionTimeViewModel: ObservableObject {
-
-    @Published var bestScore:                    Int?
-    @Published var lastAvg:                      Double?
-    @Published var avgTimeScoreInMS:             Double?
-    @Published var numOfTries:                   Int = 0
-    @Published var maxNumOfTries:                Int = 5
-    @Published var currentReactionTimeScoreInMS: Int = 0
     
-    @Published var timer = Timer()
-    @Published var isTimerOn: Bool = false
-    
-    @Published var timer2 = Timer()
-    @Published var isTimer2On: Bool = false
-    @Published var timePassed: Int = 0
-    
-    @Published var currentScreenState: Int = 1
-    
-    //MARK: - Intents
-    /**
-     Handles the logic for when the user taps on the screen. There are 5 total screens, each with an int value arbitrarly assigned to it.
-
-      1. Tap to Start!
-      1. Wait for Green...
-      1. Too Soon!
-      1. Tap!
-      1. results
-     */
     func tappedTheScreen() {
-        switch currentScreenState {
+        //after i tap on the screen when I'm on the...
+        switch model.currentScreenState {
+        //tap to start! page
         case 1:
-            //just goes to wait screen
-            currentScreenState = 2
+            model.currentScreenState = 2
+            print("\(model.currentScreenState)")
             randomCountDown()
+        //the wait page
         case 2:
-            currentScreenState = 3
+            model.currentScreenState = 3
+        //the too soon! page
         case 3:
-            currentScreenState = 2
+            model.currentScreenState = 2
+        //tap! page
         case 4:
             stopTimer()
-            currentScreenState = 5
+            model.incrementNumOfTries()
+            model.currentScreenState = 5
+        //score page
         case 5:
-            currentReactionTimeScoreInMS = 0
-            currentScreenState = 1
+            model.currentReactionTimeScoreInMS = 0
+            if model.numOfTries >= model.maxNumOfTries {
+                model.currentScreenState = 1
+                model.numOfTries = 0
+            }
+            else {
+                model.currentScreenState = 2
+                randomCountDown()
+            }
         default:
-            currentScreenState = 1
+            model.currentScreenState = 1
         }
     }
     
-    func resetGame() {
-        currentScreenState = 1
-        bestScore = nil
-        lastAvg = nil
-        avgTimeScoreInMS = nil
-        numOfTries = 0
-        maxNumOfTries = 5
-    }
-    func incrementNumOfTries() {
-        if numOfTries < maxNumOfTries{
-            numOfTries += 1
-        } else {
-            numOfTries = 0
-        }
-        print(numOfTries)
-    }
-    func incrementTime() {
-        currentReactionTimeScoreInMS += 1
-    }
-
-    func startTimer() {
-        isTimerOn.toggle()
-        timer = Timer.scheduledTimer(withTimeInterval: 0.001, repeats: true) {timer in
-            self.currentReactionTimeScoreInMS += 1
-        }
-    }
-    func stopTimer() {
-        isTimerOn.toggle()
-        timer.invalidate()
-    }
     func randomCountDown() {
         let s = Int.random(in: 3...7)
         DispatchQueue.main.asyncAfter(deadline: .now() + DispatchTimeInterval.seconds(s)) {
-            if self.currentScreenState == 2 {
-                self.currentScreenState = 4
+            if self.model.currentScreenState == 2 {
+                print("inside the if statement")
+                self.model.currentScreenState = 4
                 self.startTimer()
             }
         }
     }
+    
+    func startTimer() {
+        model.isTimerOn.toggle()
+        model.timer = Timer.scheduledTimer(withTimeInterval: 0.001, repeats: true) {_ in
+            self.model.currentReactionTimeScoreInMS += 1
+        }
+    }
+    
+    func stopTimer() {
+        model.isTimerOn.toggle()
+        model.timer.invalidate()
+    }
+    
+    //MARK: - Access to model
+    @Published var model = ReactionTimeModel()
+    
+    //MARK: - Intents
+    
 }

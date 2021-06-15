@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C1B80972678F34400446457 /* ReactionTimeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1B80962678F34400446457 /* ReactionTimeModel.swift */; };
 		4C84B26026738394005848C7 /* ReactionTimeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C84B25F26738394005848C7 /* ReactionTimeApp.swift */; };
 		4C84B26226738394005848C7 /* ReactionTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C84B26126738394005848C7 /* ReactionTimeView.swift */; };
 		4C84B26426738396005848C7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C84B26326738396005848C7 /* Assets.xcassets */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4C1B80962678F34400446457 /* ReactionTimeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionTimeModel.swift; sourceTree = "<group>"; };
 		4C84B25C26738394005848C7 /* ReactionTime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReactionTime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C84B25F26738394005848C7 /* ReactionTimeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionTimeApp.swift; sourceTree = "<group>"; };
 		4C84B26126738394005848C7 /* ReactionTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionTimeView.swift; sourceTree = "<group>"; };
@@ -35,6 +37,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4C1B80952678F2FE00446457 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4C1B80962678F34400446457 /* ReactionTimeModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		4C84B25326738394005848C7 = {
 			isa = PBXGroup;
 			children = (
@@ -54,6 +64,7 @@
 		4C84B25E26738394005848C7 /* ReactionTime */ = {
 			isa = PBXGroup;
 			children = (
+				4C1B80952678F2FE00446457 /* Model */,
 				4C84B26F26739B5A005848C7 /* ViewModel */,
 				4C84B26E26739B48005848C7 /* Views */,
 				4C84B25F26738394005848C7 /* ReactionTimeApp.swift */,
@@ -181,6 +192,7 @@
 				4C84B27126739BAF005848C7 /* ReactionTimeViewModel.swift in Sources */,
 				4C84B26226738394005848C7 /* ReactionTimeView.swift in Sources */,
 				4C84B26026738394005848C7 /* ReactionTimeApp.swift in Sources */,
+				4C1B80972678F34400446457 /* ReactionTimeModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
