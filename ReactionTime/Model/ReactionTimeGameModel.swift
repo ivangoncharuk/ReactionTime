@@ -61,5 +61,9 @@ struct ReactionTimeGameModel {
     mutating func resetTime() {
         currentReactionTimeScoreInMS = 0
     }
-    
+
+    mutating func updateAvg() {
+        avgTimeScoreInMS = currentReactionTimeScoreInMS/numOfTries
+        print(avgTimeScoreInMS!)
+    }
 }

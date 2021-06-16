@@ -180,7 +180,6 @@ struct BigTextView: View {
 
 /// This view is for the formatting of the two lines of data at the bottom of all the screens
 struct DataView: View {
-    
     var label1: String
     var label2: String
     var data1: String

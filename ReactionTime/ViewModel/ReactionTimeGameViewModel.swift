@@ -51,6 +51,7 @@ class ReactionTimeGameViewModel: ObservableObject {
             case .TAP:
                 stopTimer() //when we CLICK, it stops
                 model.incrementNumOfTries()
+                model.updateAvg()
                 model.currentScreenState = .SCORE
                 print(model.currentReactionTimeScoreInMS)
                 
@@ -59,6 +60,7 @@ class ReactionTimeGameViewModel: ObservableObject {
                 if model.numOfTries >= model.maxNumOfTries {
                     model.currentScreenState = .START
                     model.numOfTries = 0
+                    model.avgTimeScoreInMS = 0
                 }
                 else {
                     model.currentScreenState = .WAIT
