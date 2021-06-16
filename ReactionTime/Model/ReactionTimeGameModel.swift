@@ -7,39 +7,49 @@
 
 import SwiftUI
 
-struct ReactionTimeModel {
+enum ScreenStates {
+    case START
+    case WAIT
+    case TOO_SOON
+    case TAP
+    case SCORE
+    
+    var description : String {
+      switch self {
+      // Use Internationalization, as appropriate.
+      case .START: return "Start Screen"
+      case .WAIT: return "Wait Screen"
+      case .TOO_SOON: return "Too Soon! Screen"
+      case .TAP: return "Tap! Screen"
+      case .SCORE: return "Score Screen"
+      }
+    }
+}
+
+struct ReactionTimeGameModel {
 
     var bestScore:                    Int?
     var lastAvg:                      Int?
     var avgTimeScoreInMS:             Int?
-    var currentScreenState:           Int
+    var currentScreenState:           ScreenStates
     var numOfTries:                   Int
     var maxNumOfTries:                Int
     var currentReactionTimeScoreInMS: Int
     var isTimerOn:                    Bool
     var timer:                        Timer
     
+
     init() {
         bestScore = nil
         lastAvg = nil
         avgTimeScoreInMS = nil
-        currentScreenState = 1
-        numOfTries = 0
+        currentScreenState = .START
+        numOfTries = 4
         maxNumOfTries = 5
         currentReactionTimeScoreInMS = 0
         isTimerOn = false
         timer = Timer()
     }
-    
-    /**
-         Handles the logic for when the user taps on the screen. There are 5 total screens, each with an int value arbitrarly assigned to it.
-         1. Tap to Start!
-         1. Wait for Green...
-         1. Too Soon!
-         1. Tap!
-         1. results
-     */
-
     
     mutating func incrementNumOfTries() {
         numOfTries += 1

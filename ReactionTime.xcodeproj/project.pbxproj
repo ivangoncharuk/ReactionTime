@@ -7,23 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4C1B80972678F34400446457 /* ReactionTimeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1B80962678F34400446457 /* ReactionTimeModel.swift */; };
+		4C1B80972678F34400446457 /* ReactionTimeGameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1B80962678F34400446457 /* ReactionTimeGameModel.swift */; };
 		4C84B26026738394005848C7 /* ReactionTimeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C84B25F26738394005848C7 /* ReactionTimeApp.swift */; };
-		4C84B26226738394005848C7 /* ReactionTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C84B26126738394005848C7 /* ReactionTimeView.swift */; };
+		4C84B26226738394005848C7 /* ReactionTimeGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C84B26126738394005848C7 /* ReactionTimeGameView.swift */; };
 		4C84B26426738396005848C7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C84B26326738396005848C7 /* Assets.xcassets */; };
 		4C84B26726738396005848C7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C84B26626738396005848C7 /* Preview Assets.xcassets */; };
-		4C84B27126739BAF005848C7 /* ReactionTimeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C84B27026739BAF005848C7 /* ReactionTimeViewModel.swift */; };
+		4C84B27126739BAF005848C7 /* ReactionTimeGameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C84B27026739BAF005848C7 /* ReactionTimeGameViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4C1B80962678F34400446457 /* ReactionTimeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionTimeModel.swift; sourceTree = "<group>"; };
+		4C1B80962678F34400446457 /* ReactionTimeGameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionTimeGameModel.swift; sourceTree = "<group>"; };
 		4C84B25C26738394005848C7 /* ReactionTime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReactionTime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C84B25F26738394005848C7 /* ReactionTimeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionTimeApp.swift; sourceTree = "<group>"; };
-		4C84B26126738394005848C7 /* ReactionTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionTimeView.swift; sourceTree = "<group>"; };
+		4C84B26126738394005848C7 /* ReactionTimeGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionTimeGameView.swift; sourceTree = "<group>"; };
 		4C84B26326738396005848C7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4C84B26626738396005848C7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		4C84B26826738396005848C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4C84B27026739BAF005848C7 /* ReactionTimeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionTimeViewModel.swift; sourceTree = "<group>"; };
+		4C84B27026739BAF005848C7 /* ReactionTimeGameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionTimeGameViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,7 +40,7 @@
 		4C1B80952678F2FE00446457 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				4C1B80962678F34400446457 /* ReactionTimeModel.swift */,
+				4C1B80962678F34400446457 /* ReactionTimeGameModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -86,7 +86,7 @@
 		4C84B26E26739B48005848C7 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				4C84B26126738394005848C7 /* ReactionTimeView.swift */,
+				4C84B26126738394005848C7 /* ReactionTimeGameView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -94,7 +94,7 @@
 		4C84B26F26739B5A005848C7 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				4C84B27026739BAF005848C7 /* ReactionTimeViewModel.swift */,
+				4C84B27026739BAF005848C7 /* ReactionTimeGameViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -189,10 +189,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C84B27126739BAF005848C7 /* ReactionTimeViewModel.swift in Sources */,
-				4C84B26226738394005848C7 /* ReactionTimeView.swift in Sources */,
+				4C84B27126739BAF005848C7 /* ReactionTimeGameViewModel.swift in Sources */,
+				4C84B26226738394005848C7 /* ReactionTimeGameView.swift in Sources */,
 				4C84B26026738394005848C7 /* ReactionTimeApp.swift in Sources */,
-				4C1B80972678F34400446457 /* ReactionTimeModel.swift in Sources */,
+				4C1B80972678F34400446457 /* ReactionTimeGameModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
