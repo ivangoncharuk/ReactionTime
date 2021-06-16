@@ -8,12 +8,33 @@
 import SwiftUI
 
 class ReactionTimeGameViewModel: ObservableObject {
+    func stopTimer() {
+        model.isTimerOn.toggle()
+        model.timer.invalidate()
+    }
     
+    func startTimer() {
+        model.isTimerOn.toggle()
+        model.timer = Timer.scheduledTimer(withTimeInterval: 0.001, repeats: true) { [self]_ in
+            model.incrementTime()
+        }
+    }
+
+    func randomCountDown() {
+        let s = Int.random(in: 3...7)
+        DispatchQueue.main.asyncAfter(deadline: .now() + DispatchTimeInterval.seconds(s)) { [self] in
+            if model.currentScreenState == .WAIT {
+                startTimer()
+                model.currentScreenState = .TAP
+            }
+        }
+    }
     
-    /// This function handles how the program reacts to when they tap the whole
-    /// screen depending on which the currentScreenState is
-    func tappedTheScreen() {
-        
+    //MARK: - Access to model
+    @Published var model = ReactionTimeGameModel.init()
+    
+    //MARK: - Intents
+    func tapScreen() {
         switch model.currentScreenState {
         
             case .START:
@@ -22,17 +43,19 @@ class ReactionTimeGameViewModel: ObservableObject {
                 
             case .WAIT:
                 model.currentScreenState = .TOO_SOON
+                //startTimer() is called after x seconds
                 
             case .TOO_SOON:
                 model.currentScreenState = .WAIT
                 
             case .TAP:
-                stopTimer()
+                stopTimer() //when we CLICK, it stops
                 model.incrementNumOfTries()
                 model.currentScreenState = .SCORE
+                print(model.currentReactionTimeScoreInMS)
                 
             case .SCORE:
-                model.currentReactionTimeScoreInMS = 0
+                model.resetTime()
                 if model.numOfTries >= model.maxNumOfTries {
                     model.currentScreenState = .START
                     model.numOfTries = 0
@@ -43,33 +66,4 @@ class ReactionTimeGameViewModel: ObservableObject {
                 }
         }
     }
-    
-    func randomCountDown() {
-        let s = Int.random(in: 3...7)
-        DispatchQueue.main.asyncAfter(deadline: .now() + DispatchTimeInterval.seconds(s)) {
-            if self.model.currentScreenState == .WAIT {
-                print("inside the if statement")
-                self.model.currentScreenState = .TAP
-                self.startTimer()
-            }
-        }
-    }
-    
-    func startTimer() {
-        model.isTimerOn.toggle()
-        model.timer = Timer.scheduledTimer(withTimeInterval: 0.001, repeats: true) {_ in
-            self.model.currentReactionTimeScoreInMS += 1
-        }
-    }
-    
-    func stopTimer() {
-        model.isTimerOn.toggle()
-        model.timer.invalidate()
-    }
-    
-    //MARK: - Access to model
-    @Published var model = ReactionTimeGameModel()
-    
-    //MARK: - Intents
-    
 }

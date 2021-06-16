@@ -10,16 +10,17 @@ import SwiftUI
 
 struct ReactionTimeGameView: View {
     
-    @ObservedObject var vM = ReactionTimeGameViewModel()
+    @ObservedObject var vM = ReactionTimeGameViewModel.init()
     
-    let redColor: Color         = Color(#colorLiteral(red: 0.806209743, green: 0.1509520113, blue: 0.2106329799, alpha: 1))
-    let greenColor: Color       = Color(#colorLiteral(red: 0.29623577, green: 0.8585592508, blue: 0.4167816639, alpha: 1))
-    let blueColor: Color        = Color(#colorLiteral(red: 0.1610118449, green: 0.5290118456, blue: 0.8145868182, alpha: 1))
-    let textPrimaryColor: Color = Color(#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0))
+    private let redColor: Color         = Color(#colorLiteral(red: 0.806209743, green: 0.1509520113, blue: 0.2106329799, alpha: 1))
+    private let greenColor: Color       = Color(#colorLiteral(red: 0.29623577, green: 0.8585592508, blue: 0.4167816639, alpha: 1))
+    private let blueColor: Color        = Color(#colorLiteral(red: 0.1610118449, green: 0.5290118456, blue: 0.8145868182, alpha: 1))
     
-    let descriptionText: String = "When the red box turns green, tap as quickly as you can."
+    private let textPrimaryColor: Color = Color(#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0))
     
-    var bgColor: (ScreenStates) -> Color = { x in
+    private let descriptionText: String = "When the red box turns green, tap as quickly as you can."
+    
+    private var bgColor: (ScreenStates) -> Color = { x in
         let rTV = ReactionTimeGameView()
         switch x {
         case .START:
@@ -36,69 +37,63 @@ struct ReactionTimeGameView: View {
     }
     
     var body: some View {
-        let bestScore = vM.model.bestScore
-        let averageScore = vM.model.avgTimeScoreInMS
-        let last = vM.model.lastAvg
-        let css = vM.model.currentScreenState
-        let ss = ScreenStates.self
         ZStack {
-            let titleText: (ScreenStates) -> String = {x in
-                switch x {
-                case .START:
-                    return "Tap to Start!"
-                case .WAIT:
-                    return "Wait for Green..."
-                case .TOO_SOON:
-                    return "Too soon :("
-                case .TAP:
-                    return "Tap!"
-                case .SCORE:
-                    return String(vM.model.currentReactionTimeScoreInMS) + "ms"
-                }
+            let titleText: String = determineTitleTextFromScreenState(screenstate: vM.model.currentScreenState, timescore: vM.model.currentReactionTimeScoreInMS)
+            
+            switch vM.model.currentScreenState {
+            case ScreenStates.self.WAIT:
+                ThreeDots(color: textPrimaryColor)
+                    .padding(.bottom, 400)
+            case ScreenStates.self.TAP, ScreenStates.self.SCORE:
+                Image(systemName: "clock")
+                    .font(.system(size: 140, weight: .bold, design: .default))
+                    .foregroundColor(textPrimaryColor)
+                    .padding(.bottom, 400)
+            case ScreenStates.self.TOO_SOON:
+                Image(systemName: "exclamationmark.circle")
+                    .font(.system(size: 140, weight: .bold, design: .default))
+                    .foregroundColor(textPrimaryColor)
+                    .padding(.bottom, 400)
+            default:
+                EmptyView()
             }
-                
-                switch css {
-                case ss.WAIT:
-                    ThreeDots(color: textPrimaryColor)
-                        .padding(.bottom, 400)
-                case ss.TAP, ss.SCORE:
-                    Image(systemName: "clock")
-                        .font(.system(size: 140, weight: .bold, design: .default))
-                        .foregroundColor(textPrimaryColor)
-                        .padding(.bottom, 400)
-                case ss.TOO_SOON:
-                    Image(systemName: "exclamationmark.circle")
-                        .font(.system(size: 140, weight: .bold, design: .default))
-                        .foregroundColor(textPrimaryColor)
-                        .padding(.bottom, 400)
-                default:
-                    EmptyView()
+            
+            Template(backGroundColor: bgColor(vM.model.currentScreenState),
+                     titleText: titleText,
+                     subTitleText1:     (vM.model.currentScreenState == .START) ? "Best Score" : "Average",
+                     subTitleValue1:    (vM.model.currentScreenState == .START) ? "\(vM.model.bestScore ?? 0)ms" : "\(vM.model.avgTimeScoreInMS ?? 0)ms",
+                     subTitleText2:     (vM.model.currentScreenState == .START) ? "Last Average" : "Tries",
+                     subTitleValue2:    (vM.model.currentScreenState == .START) ? "\(vM.model.lastAvg ?? 0)ms" : "\(vM.model.numOfTries) of \(vM.model.maxNumOfTries)",
+                     textColor: textPrimaryColor,
+                     middleText: (vM.model.currentScreenState == .START) ? descriptionText : (vM.model.currentScreenState == .TOO_SOON) ? "Tap to try again" : "")
+                .onTapGesture {
+                    vM.tapScreen()
                 }
-                Template(backGroundColor: bgColor(css),
-                         titleText: titleText(css),
-                         subTitleText1:     (css == .START) ? "Best Score" : "Average",
-                         subTitleValue1:    (css == .START) ? "\(bestScore ?? 0)ms" : "\(averageScore ?? 0)ms",
-                         subTitleText2:     (css == .START) ? "Last Average" : "Tries",
-                         subTitleValue2:    (css == .START) ? "\(last ?? 0)ms" : "\(vM.model.numOfTries) of \(vM.model.maxNumOfTries)",
-                         textColor: textPrimaryColor,
-                         middleText: (css == .START) ? descriptionText : (css == .TOO_SOON) ? "Tap to try again" : "")
-                    .onTapGesture {
-                        vM.tappedTheScreen()
-                    }
-                
-                VStack {
-                    Text(String(vM.model.currentReactionTimeScoreInMS) + "ms")
-                        .padding(.top, 700)
-                        .font(.system(size: 40, weight: .black, design: .monospaced))
-                    Text("css: \(vM.model.currentScreenState.description)")
-                        .padding()
-                        .font(.system(size: 20, weight: .black, design: .monospaced))
-                }
-            }
+            
+            TestingView(score: vM.model.currentReactionTimeScoreInMS,
+                        css: vM.model.currentScreenState.description)
+            
         }
     }
+}
 
-    
+
+func determineTitleTextFromScreenState(screenstate x: ScreenStates, timescore s: Int) -> String {
+    switch x {
+    case .START:
+        return "Tap to Start!"
+    case .WAIT:
+        return "Wait for Green..."
+    case .TOO_SOON:
+        return "Too soon :("
+    case .TAP:
+        return "Tap!"
+    case .SCORE:
+        return String(s) + "ms"
+    }
+}
+
+
 /// This view is for the template for each screen.
 struct Template: View {
     var backGroundColor: Color
@@ -185,7 +180,7 @@ struct BigTextView: View {
 
 /// This view is for the formatting of the two lines of data at the bottom of all the screens
 struct DataView: View {
-    @ObservedObject var vModel = ReactionTimeGameViewModel()
+    
     var label1: String
     var label2: String
     var data1: String
@@ -195,9 +190,11 @@ struct DataView: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             VStack {
-                if vModel.model.currentScreenState != .TOO_SOON {
-                    TextView(size: textSize, text: "\(label1)  |  \(data1)", textColor: textColor).padding()
-                    TextView(size: textSize, text: "\(label2)  |  \(data2)", textColor: textColor).padding()
+                if ReactionTimeGameView().vM.model.currentScreenState != .TOO_SOON {
+                    TextView(size: textSize, text: "\(label1)  |  \(data1)", textColor: textColor)
+                        .padding()
+                    TextView(size: textSize, text: "\(label2)  |  \(data2)", textColor: textColor)
+                        .padding()
                 }
             }
             .padding(.bottom, 120)
@@ -219,11 +216,24 @@ struct ThreeDots: View {
     }
 }
 
+struct TestingView: View {
+    var score: Int
+    var css: String
+    var body: some View {
+        VStack {
+            Text(String(score) + "ms")
+                .padding(.top, 700)
+                .font(.system(size: 40, weight: .black, design: .monospaced))
+            Text("css: \(css)")
+                .padding()
+                .font(.system(size: 20, weight: .black, design: .monospaced))
+        }
+    }
+}
+
 /// This is for the content preview screen
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ReactionTimeGameView()
     }
 }
-
-

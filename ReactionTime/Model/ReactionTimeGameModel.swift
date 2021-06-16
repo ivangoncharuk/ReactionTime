@@ -15,14 +15,13 @@ enum ScreenStates {
     case SCORE
     
     var description : String {
-      switch self {
-      // Use Internationalization, as appropriate.
-      case .START: return "Start Screen"
-      case .WAIT: return "Wait Screen"
-      case .TOO_SOON: return "Too Soon! Screen"
-      case .TAP: return "Tap! Screen"
-      case .SCORE: return "Score Screen"
-      }
+        switch self {
+        case .START: return "Start Screen"
+        case .WAIT: return "Wait Screen"
+        case .TOO_SOON: return "Too Soon! Screen"
+        case .TAP: return "Tap! Screen"
+        case .SCORE: return "Score Screen"
+        }
     }
 }
 
@@ -31,24 +30,23 @@ struct ReactionTimeGameModel {
     var bestScore:                    Int?
     var lastAvg:                      Int?
     var avgTimeScoreInMS:             Int?
-    var currentScreenState:           ScreenStates
     var numOfTries:                   Int
     var maxNumOfTries:                Int
-    var currentReactionTimeScoreInMS: Int
     var isTimerOn:                    Bool
     var timer:                        Timer
-    
+    var currentReactionTimeScoreInMS: Int
+    var currentScreenState:           ScreenStates
 
     init() {
         bestScore = nil
         lastAvg = nil
         avgTimeScoreInMS = nil
-        currentScreenState = .START
-        numOfTries = 4
+        numOfTries = 0
         maxNumOfTries = 5
-        currentReactionTimeScoreInMS = 0
         isTimerOn = false
         timer = Timer()
+        currentReactionTimeScoreInMS = 0
+        currentScreenState = .START
     }
     
     mutating func incrementNumOfTries() {
@@ -59,5 +57,9 @@ struct ReactionTimeGameModel {
     mutating func incrementTime() {
         currentReactionTimeScoreInMS += 1
     }
-
+    
+    mutating func resetTime() {
+        currentReactionTimeScoreInMS = 0
+    }
+    
 }
