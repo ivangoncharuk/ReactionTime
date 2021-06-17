@@ -8,64 +8,107 @@
 import SwiftUI
 
 class ReactionTimeGameViewModel: ObservableObject {
-    func stopTimer() {
-        model.isTimerOn.toggle()
-        model.timer.invalidate()
-    }
     
-    func startTimer() {
-        model.isTimerOn.toggle()
-        model.timer = Timer.scheduledTimer(withTimeInterval: 0.001, repeats: true) { [self]_ in
-            model.incrementTime()
-        }
-    }
-
-    func randomCountDown() {
-        let s = Int.random(in: 3...7)
-        DispatchQueue.main.asyncAfter(deadline: .now() + DispatchTimeInterval.seconds(s)) { [self] in
-            if model.currentScreenState == .WAIT {
-                startTimer()
-                model.currentScreenState = .TAP
-            }
+    
+    var bgColor: (ScreenStates) -> Color = { x in
+        let rTGV = ReactionTimeGameView()
+        switch x {
+        case .START, .TOO_SOON, .TOO_LATE, .SCORE:
+            return rTGV.blueColor
+        case .WAIT:
+            return rTGV.redColor
+        case .TAP:
+            return rTGV.greenColor
         }
     }
     
-    //MARK: - Access to model
-    @Published var model = ReactionTimeGameModel.init()
-    
-    //MARK: - Intents
-    func tapScreen() {
-        switch model.currentScreenState {
+    func determineTitleTextFromScreenState(screenstate x: ScreenStates, timescore s: Int) -> String {
+        switch x {
+        case .START:
+            return "Tap to Start!"
+        case .WAIT:
+            return "Wait for Green..."
+        case .TOO_SOON: return "Too soon :("
+        case .TOO_LATE: return "Too late :("
+        case .TAP:
+            return "Tap!"
+        case .SCORE:
+            return String(s) + "ms"
         
-            case .START:
-                model.currentScreenState = .WAIT
-                randomCountDown()
-                
-            case .WAIT:
-                model.currentScreenState = .TOO_SOON
-                //startTimer() is called after x seconds
-                
-            case .TOO_SOON:
-                model.currentScreenState = .WAIT
-                
-            case .TAP:
-                stopTimer() //when we CLICK, it stops
-                model.incrementNumOfTries()
-                model.updateAvg()
-                model.currentScreenState = .SCORE
-                print(model.currentReactionTimeScoreInMS)
-                
-            case .SCORE:
-                model.resetTime()
-                if model.numOfTries >= model.maxNumOfTries {
-                    model.currentScreenState = .START
-                    model.numOfTries = 0
-                    model.avgTimeScoreInMS = 0
-                }
-                else {
-                    model.currentScreenState = .WAIT
-                    randomCountDown()
-                }
         }
     }
+	//MARK: - Access to model
+	@Published var model = ReactionTimeGameModel.init()
+	
+	//MARK: - Intents
+	func tapScreen() {
+		switch model.currentScreenState {
+		
+		case .START:
+			model.currentScreenState = .WAIT
+			randomCountDown()
+			
+		case .WAIT:
+            //when you click too soon:
+			model.currentScreenState = .TOO_SOON
+            //startTimer() is called after x seconds and will go to .TAP automatically
+		
+        case .TOO_SOON:
+			model.currentScreenState = .WAIT
+    
+		case .TAP:
+			stopTimer() //when we CLICK, it stops
+			model.incrementNumOfTries()
+			model.updateAvg()
+			model.currentScreenState = .SCORE
+            
+        case .TOO_LATE:
+            model.currentScreenState = .WAIT
+			
+		case .SCORE:
+            model.resetCurrentReactionTimeScoreInMS()
+			if model.numOfTries >= model.maxNumOfTries {
+				model.currentScreenState = .START
+				model.numOfTries = 0
+				model.avgTimeScoreInMS = 0
+			}
+			else {
+				model.currentScreenState = .WAIT
+				randomCountDown()
+			}
+		}
+	}
+	
+	func stopTimer() {
+		model.isTimerOn.toggle()
+		model.timer.invalidate()
+	}
+    
+    /// Will increment the currentReactionTimeScoreInMS every millisecond until 20,000ms, then it will stop the timer
+	func startTimer() {
+
+		model.timer = Timer.scheduledTimer(withTimeInterval: 0.001, repeats: true) { [self]_ in
+			model.incrementTime()
+            if model.currentReactionTimeScoreInMS > 13000 {
+                stopTimer()
+                model.resetCurrentReactionTimeScoreInMS()
+                model.currentScreenState = .TOO_LATE
+                return
+            }
+		}
+	}
+	
+	/// This function will automatically switch to the next screen
+	/// and start the timer after a random amount of seconds have passed
+	func randomCountDown() {
+		let s = Int.random(in: 3...7)
+		DispatchQueue.main.asyncAfter(deadline: .now() + DispatchTimeInterval.seconds(s)) { [self] in
+			if model.currentScreenState == .WAIT {
+				startTimer()
+				model.currentScreenState = .TAP
+			}
+		}
+	}
 }
+
+

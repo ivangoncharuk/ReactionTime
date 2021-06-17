@@ -7,63 +7,83 @@
 
 import SwiftUI
 
+/**
+ All the current states of the game screen
+ 
+ START           -->     "Start Screen"
+ 
+ WAIT              -->     "Wait Screen"
+ 
+ TOO_SOON  -->     "Too Soon! Screen"
+ 
+ TAP                -->     "Tap! Screen"
+ 
+ SCORE          -->     "Score Screen"
+ */
 enum ScreenStates {
-    case START
-    case WAIT
-    case TOO_SOON
-    case TAP
-    case SCORE
-    
-    var description : String {
-        switch self {
-        case .START: return "Start Screen"
-        case .WAIT: return "Wait Screen"
-        case .TOO_SOON: return "Too Soon! Screen"
-        case .TAP: return "Tap! Screen"
-        case .SCORE: return "Score Screen"
+	case START
+	case WAIT
+	case TOO_SOON
+    case TOO_LATE
+	case TAP
+	case SCORE
+	
+	var description: String {
+		switch self {
+		case .START: return "Start Screen"
+		case .WAIT: return "Wait Screen"
+		case .TOO_SOON: return "Too Soon! Screen"
+        case .TOO_LATE: return "Too Late! Screen"
+		case .TAP: return "Tap! Screen"
+		case .SCORE: return "Score Screen"
+
         }
-    }
+	}
 }
 
+/// The model for the Reaction Time Game
 struct ReactionTimeGameModel {
-
-    var bestScore:                    Int?
-    var lastAvg:                      Int?
-    var avgTimeScoreInMS:             Int?
-    var numOfTries:                   Int
-    var maxNumOfTries:                Int
-    var isTimerOn:                    Bool
-    var timer:                        Timer
-    var currentReactionTimeScoreInMS: Int
-    var currentScreenState:           ScreenStates
-
-    init() {
-        bestScore = nil
-        lastAvg = nil
-        avgTimeScoreInMS = nil
-        numOfTries = 0
-        maxNumOfTries = 5
-        isTimerOn = false
-        timer = Timer()
-        currentReactionTimeScoreInMS = 0
-        currentScreenState = .START
-    }
+	
+	var bestScore:                    Int?
+	var lastAvg:                      Int?
+	var avgTimeScoreInMS:             Int
+	var numOfTries:                   Int
+	var maxNumOfTries:                Int
+	var isTimerOn:                    Bool
+	var timer:                        Timer
+	var currentReactionTimeScoreInMS: Int
+	var currentScreenState:           ScreenStates
+	
+	
+	init() {
+		bestScore = nil
+		lastAvg = nil
+		avgTimeScoreInMS = 0
+		numOfTries = 0
+		maxNumOfTries = 5
+		isTimerOn = false
+		timer = Timer()
+		currentReactionTimeScoreInMS = 0
+		currentScreenState = .START
+	}
     
-    mutating func incrementNumOfTries() {
-        numOfTries += 1
-        print("Number of tries: \(numOfTries)")
-    }
     
-    mutating func incrementTime() {
-        currentReactionTimeScoreInMS += 1
-    }
+    /// Increments the numOfTries integer variable
+	mutating func incrementNumOfTries() {
+		numOfTries += 1
+	}
     
-    mutating func resetTime() {
-        currentReactionTimeScoreInMS = 0
-    }
-
-    mutating func updateAvg() {
-        avgTimeScoreInMS = currentReactionTimeScoreInMS/numOfTries
-        print(avgTimeScoreInMS!)
-    }
+    /// Increments the current time score by 1 every time its called.
+	mutating func incrementTime() {
+		currentReactionTimeScoreInMS += 1
+	}
+    
+	mutating func resetCurrentReactionTimeScoreInMS() {
+		currentReactionTimeScoreInMS = 0
+	}
+	
+	mutating func updateAvg() {
+		avgTimeScoreInMS = currentReactionTimeScoreInMS/numOfTries
+		//TODO: This isn't the actual avgTimeScore. Make an array to store the values of the reactionTimeScore.
+	}
 }
