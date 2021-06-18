@@ -33,8 +33,8 @@ struct ReactionTimeGameView: View {
         )
 
         ZStack {
-            TemplateScreenView(backGroundColor: vM.bgColor(curScreenSt),
-                               titleText: titleText,
+            BackGroundView(color: vM.bgColor(curScreenSt))
+            TemplateScreenView(titleText: titleText,
                                subTitleText1:  (curScreenSt == .START) ? "Best Score" : "Average",
                                subTitleValue1: (curScreenSt == .START) ? "\(bestScore ?? 0)ms" : "\(vM.model.avgTimeScoreInMS)ms",
                                subTitleText2:  (curScreenSt == .START) ? "Last Average" : "Tries",
@@ -46,15 +46,27 @@ struct ReactionTimeGameView: View {
                 .onTapGesture {
                     vM.tapScreen()
                 }
-
-            TestingView(score: vM.model.currentReactionTimeScoreInMS,
-                        css: curScreenSt.description)
+            
+            TestingView(score: vM.model.currentReactionTimeScoreInMS)
             
             IconView(curScreenSt: vM.model.currentScreenState)
+            
+            Image(systemName: "arrow.uturn.backward")
+                .foregroundColor(textPrimaryColor)
+                .padding(.leading, 270)
+                .padding(.bottom, 700)
+                .font(.system(size: 80, weight: .bold, design: .default))
+                .border(Color.black, width: 2)
+                .onTapGesture {
+                    vM.resetGame()
+                }
+                
             
         }
     }
 }
+
+
 
 /// This is for the content preview screen
 struct ContentView_Previews: PreviewProvider {

@@ -10,7 +10,6 @@ import SwiftUI
 /// This view is for the template for each screen.
 struct TemplateScreenView: View {
     //TODO: Only display DataView when we have data for the start screen.
-    var backGroundColor: Color
     var titleText: String
     var subTitleText1: String
     var subTitleValue1: String
@@ -25,7 +24,7 @@ struct TemplateScreenView: View {
             let smallTextSize: CGFloat = 25.0
             let bigTextSize: CGFloat = 55.0
             
-            BackGroundView(color: backGroundColor)
+
             VStack {
                 BigTextView(textSize: bigTextSize, titleContent: titleText,
                             textColor: textColor)
@@ -128,12 +127,9 @@ struct ThreeDots: View {
         }
     }
 }
-
-
  
  struct TestingView: View {
      var score: Int
-     var css: String
      var body: some View {
          VStack {
              Text(String(score) + "ms")
