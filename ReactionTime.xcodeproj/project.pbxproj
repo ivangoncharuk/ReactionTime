@@ -41,12 +41,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4C1B80952678F2FE00446457 /* Model */ = {
+		4C1B80952678F2FE00446457 /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				4C1B80962678F34400446457 /* ReactionTimeGameModel.swift */,
 			);
-			path = Model;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		4C84B25326738394005848C7 = {
@@ -71,9 +71,9 @@
 				4C84B26826738396005848C7 /* Info.plist */,
 				4C84B26326738396005848C7 /* Assets.xcassets */,
 				4C84B25F26738394005848C7 /* ReactionTimeApp.swift */,
-				4C84B26F26739B5A005848C7 /* ViewModel */,
+				4C84B26F26739B5A005848C7 /* ViewModels */,
 				4C84B26E26739B48005848C7 /* Views */,
-				4C1B80952678F2FE00446457 /* Model */,
+				4C1B80952678F2FE00446457 /* Models */,
 				4C84B26526738396005848C7 /* Preview Content */,
 			);
 			path = ReactionTime;
@@ -97,12 +97,12 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		4C84B26F26739B5A005848C7 /* ViewModel */ = {
+		4C84B26F26739B5A005848C7 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
 				4C84B27026739BAF005848C7 /* ReactionTimeGameViewModel.swift */,
 			);
-			path = ViewModel;
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

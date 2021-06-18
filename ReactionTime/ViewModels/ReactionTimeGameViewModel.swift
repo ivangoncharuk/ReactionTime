@@ -22,25 +22,28 @@ class ReactionTimeGameViewModel: ObservableObject {
         }
     }
     
+    /// The logic behind what the titleText displays for each state
+    /// - Parameters:
+    ///   - x: The current screen state
+    ///   - s: The time score in MS
+    /// - Returns: The string for the titleText
     func determineTitleTextFromScreenState(screenstate x: ScreenStates, timescore s: Int) -> String {
         switch x {
-        case .START:
-            return "Tap to Start!"
-        case .WAIT:
-            return "Wait for Green..."
+        case .START: return "Tap to Start!"
+        case .WAIT: return "Wait for Green..."
         case .TOO_SOON: return "Too soon :("
         case .TOO_LATE: return "Too late :("
-        case .TAP:
-            return "Tap!"
-        case .SCORE:
-            return String(s) + "ms"
-        
+        case .TAP: return "Tap!"
+        case .SCORE: return String(s) + "ms"
         }
     }
+    
 	//MARK: - Access to model
 	@Published var model = ReactionTimeGameModel.init()
 	
-	//MARK: - Intents
+    //MARK: - Intents
+    /// The logic behind when the user taps the main screen. This will take the user through all the states of the
+    /// game.
 	func tapScreen() {
 		switch model.currentScreenState {
 		
@@ -68,9 +71,7 @@ class ReactionTimeGameViewModel: ObservableObject {
 		case .SCORE:
             model.resetCurrentReactionTimeScoreInMS()
 			if model.numOfTries >= model.maxNumOfTries {
-				model.currentScreenState = .START
-				model.numOfTries = 0
-				model.avgTimeScoreInMS = 0
+                resetGame()
 			}
 			else {
 				model.currentScreenState = .WAIT
@@ -78,7 +79,15 @@ class ReactionTimeGameViewModel: ObservableObject {
 			}
 		}
 	}
-	
+    
+    func resetGame() {
+        model.currentScreenState = .START
+        model.numOfTries = 0
+        model.avgTimeScoreInMS = 0
+        model.scores = []
+    }
+    
+    /// Stops the timer
 	func stopTimer() {
 		model.isTimerOn.toggle()
 		model.timer.invalidate()
@@ -86,7 +95,6 @@ class ReactionTimeGameViewModel: ObservableObject {
     
     /// Will increment the currentReactionTimeScoreInMS every millisecond until 20,000ms, then it will stop the timer
 	func startTimer() {
-
 		model.timer = Timer.scheduledTimer(withTimeInterval: 0.001, repeats: true) { [self]_ in
 			model.incrementTime()
             if model.currentReactionTimeScoreInMS > 13000 {

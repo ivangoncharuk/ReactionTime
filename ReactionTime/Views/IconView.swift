@@ -25,6 +25,11 @@ struct IconView: View {
                 .font(.system(size: 140, weight: .bold, design: .default))
                 .foregroundColor(textPrimaryColor)
                 .padding(.bottom, 400)
+        case .START:
+            Image(systemName: "bolt.fill")
+                .font(.system(size: 140, weight: .bold, design: .default))
+                .foregroundColor(textPrimaryColor)
+                .padding(.bottom, 400)
         default:
             EmptyView()
         }

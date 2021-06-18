@@ -53,6 +53,7 @@ struct ReactionTimeGameModel {
 	var timer:                        Timer
 	var currentReactionTimeScoreInMS: Int
 	var currentScreenState:           ScreenStates
+    var scores:                       [Int]
 	
 	
 	init() {
@@ -65,6 +66,7 @@ struct ReactionTimeGameModel {
 		timer = Timer()
 		currentReactionTimeScoreInMS = 0
 		currentScreenState = .START
+        scores = []
 	}
     
     
@@ -83,7 +85,11 @@ struct ReactionTimeGameModel {
 	}
 	
 	mutating func updateAvg() {
-		avgTimeScoreInMS = currentReactionTimeScoreInMS/numOfTries
-		//TODO: This isn't the actual avgTimeScore. Make an array to store the values of the reactionTimeScore.
+        scores.append(currentReactionTimeScoreInMS)
+        var totalScore: Int = 0
+        for i in scores {
+            totalScore += i
+        }
+        avgTimeScoreInMS = totalScore/scores.count
 	}
 }
