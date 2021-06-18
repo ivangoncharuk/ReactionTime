@@ -9,13 +9,13 @@ import SwiftUI
 
 struct IconView: View {
     let textPrimaryColor = ReactionTimeGameView().textPrimaryColor
-    var curScreenSt: ScreenStates
+    var curScreenSt: ScreenState
     var body: some View {
         switch curScreenSt {
         case .WAIT:
             ThreeDots(color: textPrimaryColor)
                 .padding(.bottom, 400)
-        case .TAP, ScreenStates.self.SCORE:
+        case .TAP, ScreenState.self.SCORE:
             Image(systemName: "clock")
                 .font(.system(size: 140, weight: .bold, design: .default))
                 .foregroundColor(textPrimaryColor)

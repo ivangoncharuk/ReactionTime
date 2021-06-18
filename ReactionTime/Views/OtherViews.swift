@@ -102,7 +102,8 @@ struct DataView: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             VStack {
-                if ReactionTimeGameView().vM.m.currentScreenState != .TOO_SOON {
+                let css = ReactionTimeGameView().vM.m.getCurrentScreenState()
+                if css != .TOO_SOON {
                     TextView(size: textSize, text: "\(label1)  |  \(data1)", textColor: textColor)
                         .padding()
                     TextView(size: textSize, text: "\(label2)  |  \(data2)", textColor: textColor)
