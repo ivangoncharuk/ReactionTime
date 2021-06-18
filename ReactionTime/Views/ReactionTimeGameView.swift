@@ -22,51 +22,58 @@ struct ReactionTimeGameView: View {
     var body: some View {
         
         //MARK: - renaming these so my params arent super long :)
-        let curScreenSt = vM.model.currentScreenState
-        let bestScore = vM.model.bestScore
-        let numOfTries = vM.model.numOfTries
-        let maxNumOfTries = vM.model.maxNumOfTries
-        let lastAvg = vM.model.lastAvg
+        let curScreenSt = vM.m.currentScreenState
+        let bestScore = vM.m.bestScore
+        let numOfTries = vM.m.numOfTries
+        let maxNumOfTries = vM.m.maxNumOfTries
+        let lastAvg = vM.m.lastAvg
         let titleText: String = vM.determineTitleTextFromScreenState(
             screenstate: curScreenSt,
-            timescore: vM.model.currentReactionTimeScoreInMS
+            timescore: vM.m.currentReactionTimeScoreInMS
         )
-
         ZStack {
             BackGroundView(color: vM.bgColor(curScreenSt))
-            TemplateScreenView(titleText: titleText,
-                               subTitleText1:  (curScreenSt == .START) ? "Best Score" : "Average",
-                               subTitleValue1: (curScreenSt == .START) ? "\(bestScore ?? 0)ms" : "\(vM.model.avgTimeScoreInMS)ms",
-                               subTitleText2:  (curScreenSt == .START) ? "Last Average" : "Tries",
-                               subTitleValue2: (curScreenSt == .START) ? "\(lastAvg ?? 0)ms" : "\(numOfTries) of \(maxNumOfTries)",
-                               textColor: textPrimaryColor,
-                               middleText: (curScreenSt == .START) ? descriptionText :
-                                           (curScreenSt == .TOO_SOON) ? "Tap to try again" :
-                                           (curScreenSt == .TOO_LATE) ?  "You took too long" : "")
                 .onTapGesture {
                     vM.tapScreen()
                 }
-            
-            TestingView(score: vM.model.currentReactionTimeScoreInMS)
-            
-            IconView(curScreenSt: vM.model.currentScreenState)
-            
-            Image(systemName: "arrow.uturn.backward")
-                .foregroundColor(textPrimaryColor)
-                .padding(.leading, 270)
-                .padding(.bottom, 700)
-                .font(.system(size: 80, weight: .bold, design: .default))
-                .border(Color.black, width: 2)
-                .onTapGesture {
-                    vM.resetGame()
+            VStack {
+                HStack {
+                    Spacer()
+                        .onTapGesture {
+                            vM.tapScreen()
+                        }
+                    Image(systemName: "arrow.uturn.backward")
+                        .foregroundColor(textPrimaryColor)
+                        .font(.system(size: 80, weight: .bold, design: .default))
+                        .border(Color.black, width: 2)
+                        .padding(.trailing, 30)
+                        .onTapGesture {
+                            vM.resetGame()
+                    }
                 }
-                
-            
+                ZStack {
+                    TemplateScreenView(titleText: titleText,
+                                       subTitleText1:  (curScreenSt == .START) ? "Best Score" : "Average",
+                                       subTitleValue1: (curScreenSt == .START) ? "\(bestScore ?? 0)ms" : "\(vM.m.avgTimeScoreInMS)ms",
+                                       subTitleText2:  (curScreenSt == .START) ? "Last Average" : "Tries",
+                                       subTitleValue2: (curScreenSt == .START) ? "\(lastAvg ?? 0)ms" : "\(numOfTries) of \(maxNumOfTries)",
+                                       textColor: textPrimaryColor,
+                                       middleText: (curScreenSt == .START) ? descriptionText :
+                                                   (curScreenSt == .TOO_SOON) ? "Tap to try again" :
+                                                   (curScreenSt == .TOO_LATE) ?  "You took too long" : "")
+                    
+                    TestingView(score: vM.m.currentReactionTimeScoreInMS)
+                    
+                    IconView(curScreenSt: vM.m.currentScreenState)
+                    
+                }
+                .onTapGesture {
+                    vM.tapScreen()
+                }
+            }
         }
     }
 }
-
-
 
 /// This is for the content preview screen
 struct ContentView_Previews: PreviewProvider {

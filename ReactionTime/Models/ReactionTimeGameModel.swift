@@ -44,7 +44,7 @@ enum ScreenStates {
 /// The model for the Reaction Time Game
 struct ReactionTimeGameModel {
 	
-	var bestScore:                    Int?
+	var bestScore:                    Int
 	var lastAvg:                      Int?
 	var avgTimeScoreInMS:             Int
 	var numOfTries:                   Int
@@ -57,11 +57,11 @@ struct ReactionTimeGameModel {
 	
 	
 	init() {
-		bestScore = nil
+		bestScore = 0
 		lastAvg = nil
 		avgTimeScoreInMS = 0
 		numOfTries = 0
-		maxNumOfTries = 5
+		maxNumOfTries = 2
 		isTimerOn = false
 		timer = Timer()
 		currentReactionTimeScoreInMS = 0
@@ -80,16 +80,27 @@ struct ReactionTimeGameModel {
 		currentReactionTimeScoreInMS += 1
 	}
     
+    /// Resets the current reaction time score.
 	mutating func resetCurrentReactionTimeScoreInMS() {
 		currentReactionTimeScoreInMS = 0
 	}
-	
+    
+    /// Updates the average time score for the current time trials.
 	mutating func updateAvg() {
-        scores.append(currentReactionTimeScoreInMS)
+        //TODO: this probably has errors
         var totalScore: Int = 0
         for i in scores {
             totalScore += i
         }
-        avgTimeScoreInMS = totalScore/scores.count
+        avgTimeScoreInMS = totalScore/numOfTries
 	}
+    
+    mutating func updateBestScore() {
+        if currentReactionTimeScoreInMS > bestScore {
+            bestScore = currentReactionTimeScoreInMS
+        }
+    }
+    mutating func updateLastAvg() {
+        //TODO: Finish this
+    }
 }
