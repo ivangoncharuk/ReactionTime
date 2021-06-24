@@ -23,12 +23,15 @@ class ReactionTimeGameViewModel: ObservableObject {
     }
     
 	//MARK: - Access to model
-	@Published var m = ReactionTimeGameModel.init(maxNumOfTries: 5)
+	@Published var m = ReactionTimeGameModel.init(maxNumOfTries: 3)
 	
     //MARK: - Intents
     /// The logic behind when the user taps the main screen. This will take the user through all the states of the
     /// game.
 	func tapScreen() {
+        print("scores: \(m.scores)")
+        print("best score rn: \(m.getTheBestScore())")
+        print("bestScore: : \(m.getBestScore())")
 		switch m.getCurrentScreenState() {
 		
 		case .START:
@@ -46,7 +49,6 @@ class ReactionTimeGameViewModel: ObservableObject {
     
 		case .TAP:
 			stopTimer() //when we CLICK, it stops
-            m.updateBestScore()
 			m.incrementNumOfTries()
             m.scores.append(m.getCRTSInMS())
 			m.updateAvg()

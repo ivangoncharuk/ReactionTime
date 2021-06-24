@@ -40,17 +40,15 @@ struct ReactionTimeGameView: View {
             VStack {
                 HStack {
                     Spacer()
-                        .onTapGesture {
-                            vM.tapScreen()
-                        }
-                    Image(systemName: "arrow.uturn.backward")
-                        .foregroundColor(textPrimaryColor)
-                        .font(.system(size: 80, weight: .bold, design: .default))
-                        .border(Color.black, width: 2)
-                        .padding(.trailing, 30)
-                        .onTapGesture {
-                            vM.resetGame()
+                    Button(action: {vM.resetGame()} ) {
+                        Image(systemName: "arrow.uturn.backward")
+                            .foregroundColor(textPrimaryColor)
+                            .font(.system(size: 80, weight: .bold, design: .default))
+                            .border(Color.black, width: 2)
+                            .padding(.top, 30)
+                            .padding(.trailing, 30)
                     }
+
                 }
                 ZStack {
                     TemplateScreenView(titleText: titleText,

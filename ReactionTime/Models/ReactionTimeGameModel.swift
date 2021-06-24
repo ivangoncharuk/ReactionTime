@@ -139,7 +139,6 @@ struct ReactionTimeGameModel {
     
     /// Updates the average time score for the current time trials.
 	mutating func updateAvg() {
-        //TODO: this probably has errors
         var totalScore: Int = 0
         for i in self.scores {
             totalScore += i
@@ -148,10 +147,20 @@ struct ReactionTimeGameModel {
 	}
     
     mutating func updateBestScore() {
-        if currentReactionTimeScoreInMS > bestScore {
-            bestScore = currentReactionTimeScoreInMS
-        }
+        bestScore = getTheBestScore()
     }
+    func getTheBestScore() -> Int {
+        var a = 0
+        if scores.count > 0 {
+            for x in 0...scores.count - 1 {
+                if scores[x] < a {
+                    a = scores[x]
+                }
+            }
+        }
+        return a
+    }
+    
     mutating func updateLastAvg() {
         self.lastAvg = avgTimeScoreInMS        
     }
